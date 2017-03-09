@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#329bfc</color>
+    <color name="colorPrimaryDark">#1288f5</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="main_bg">#499EEC</color>
+    <color name="main_bg">#499eec</color>
     <color name="recycler_bg">#c9c5c5</color>
-    <color name="cardview_bg">#ECECEC</color>
+    <color name="cardview_bg">#ececec</color>
     <color name="cardview_item">#595959</color>
 </resources>
