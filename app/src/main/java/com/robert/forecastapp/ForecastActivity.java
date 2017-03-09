@@ -3,13 +3,16 @@ package com.robert.forecastapp;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,7 +28,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.robert.forecastapp.model.WeatherData;
+import com.robert.forecastapp.adapters.ForecastAdapter;
+import com.robert.forecastapp.models.WeatherData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +47,9 @@ public class ForecastActivity extends AppCompatActivity implements GoogleApiClie
     private final int PERMISSION_LOCATION = 111;
     private ArrayList<WeatherData> weatherDatas = new ArrayList<>();
 
+    private RecyclerView recyclerView;
+    private ForecastAdapter forecastAdapter;
+
     private ImageView weatherIconMini;
     private ImageView weatherIcon;
     private TextView forecastDate;
@@ -51,18 +58,26 @@ public class ForecastActivity extends AppCompatActivity implements GoogleApiClie
     private TextView forecastLocation;
     private TextView weatherType;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
 
+        recyclerView = (RecyclerView) findViewById(R.id.content_forecast_data);
         weatherIconMini = (ImageView) findViewById(R.id.imageViewWeatherIconMini);
         weatherIcon = (ImageView) findViewById(R.id.imageViewWeatherIcon);
         forecastDate = (TextView) findViewById(R.id.textViewDate);
         currentTemp = (TextView) findViewById(R.id.textViewCurTemp);
         minTemp = (TextView) findViewById(R.id.textViewMinTemp);
         forecastLocation = (TextView) findViewById(R.id.textViewLocation);
-        weatherType = (TextView) findViewById(R.id.textViewWeatherType);
+        weatherType = (TextView) findViewById(R.id.textViewCardWeatherType);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        forecastAdapter = new ForecastAdapter(weatherDatas, getApplicationContext());
+        recyclerView.setAdapter(forecastAdapter);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -84,7 +99,7 @@ public class ForecastActivity extends AppCompatActivity implements GoogleApiClie
                     String countryName = cityObj.getString("country");
                     JSONArray forecastsArr = response.getJSONArray("list");
 
-                    for (int i = 0; i < 10; i++) {
+                    for (int i = 0; i < 40; i++) {
                         JSONObject obj = forecastsArr.getJSONObject(i);
                         JSONObject main = obj.getJSONObject("main");
                         Double currentTemp = main.getDouble("temp");
@@ -99,7 +114,10 @@ public class ForecastActivity extends AppCompatActivity implements GoogleApiClie
 
                         WeatherData weatherData = new WeatherData(cityName, countryName, currentTemp.intValue(), maxTemp.intValue(), minTemp.intValue(), weatherType, rawDate);
                         weatherDatas.add(weatherData);
+                        Log.i("test", rawDate);
+                        Log.i("test", weatherData.getFormattedDate());
                     }
+                    forecastAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Log.e("ERROR", e.getLocalizedMessage());
                 }

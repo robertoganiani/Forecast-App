@@ -1,4 +1,4 @@
-package com.robert.forecastapp.model;
+package com.robert.forecastapp.models;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -63,7 +63,7 @@ public class WeatherData {
     }
 
     public String formatDate(String rawDate) {
-        DateFormat outputFormat = new SimpleDateFormat("LLL dd, yyyy");
+        DateFormat outputFormat = new SimpleDateFormat("LLL dd yyyy, HH:mm");
         DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Date date = null;
