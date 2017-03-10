@@ -10,8 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +17,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +55,7 @@ public class ForecastActivity extends AppCompatActivity implements GoogleApiClie
 
     private RecyclerView recyclerView;
     private ForecastAdapter forecastAdapter;
+    private ProgressBar progressBar;
 
     private ImageView weatherIconMini;
     private ImageView weatherIcon;
@@ -73,6 +74,8 @@ public class ForecastActivity extends AppCompatActivity implements GoogleApiClie
         Toolbar toolbar = (Toolbar) findViewById(R.id.forecast_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBarForcast);
 
         recyclerView = (RecyclerView) findViewById(R.id.content_forecast_data);
         weatherIconMini = (ImageView) findViewById(R.id.imageViewWeatherIconMini);
@@ -98,8 +101,10 @@ public class ForecastActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     public void downloadForecastData(Location location) {
+        weatherDatas.clear();
         final String URL_COORDS = "?lat=" + location.getLatitude() + "&lon=" + location.getLongitude();
         final String URL = BASE_URL + URL_COORDS + TEMP_UNITS + API_KEY;
+        //final String URL = "http://api.openweathermap.org/data/2.5/forecast?lat=41.7151377&lon=44.827096&units=metric&APPID=422ff6b63cc2df82cbc04a95aff1cbf1";
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -109,7 +114,7 @@ public class ForecastActivity extends AppCompatActivity implements GoogleApiClie
                     String countryName = cityObj.getString("country");
                     JSONArray forecastsArr = response.getJSONArray("list");
 
-                    for (int i = 0; i < 40; i++) {
+                    for (int i = 0; i < 25; i++) {
                         JSONObject obj = forecastsArr.getJSONObject(i);
                         JSONObject main = obj.getJSONObject("main");
                         Double currentTemp = main.getDouble("temp");
@@ -124,14 +129,15 @@ public class ForecastActivity extends AppCompatActivity implements GoogleApiClie
 
                         WeatherData weatherData = new WeatherData(cityName, countryName, currentTemp.intValue(), maxTemp.intValue(), minTemp.intValue(), weatherType, rawDate);
                         weatherDatas.add(weatherData);
-                        Log.i("test", rawDate);
-                        Log.i("test", weatherData.getFormattedDate());
+                        //Log.i("test", rawDate);
+                        //Log.i("test", weatherData.getFormattedDate());
                     }
                     forecastAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Log.e("ERROR", e.getLocalizedMessage());
                 }
                 updateUI();
+                progressBar.setVisibility(View.GONE);
             }
         }, new Response.ErrorListener() {
             @Override

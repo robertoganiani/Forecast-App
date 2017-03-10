@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    app:cardBackgroundColor="@color/cardview_bg"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/main_bg"
     app:cardCornerRadius="5dp"
     app:cardElevation="5dp"
     app:contentPadding="5dp">
@@ -35,7 +37,7 @@
             android:layout_marginTop="15dp"
             android:fontFamily="sans-serif-condensed"
             android:text="Monday"
-            android:textColor="@color/cardview_item"
+            android:textColor="@color/cardview_bg"
             android:textSize="20sp"
             app:layout_constraintLeft_toRightOf="@+id/imageViewCardIconMini"
             app:layout_constraintTop_toTopOf="parent" />
@@ -49,7 +51,7 @@
             android:layout_marginTop="0dp"
             android:fontFamily="sans-serif"
             android:text="Clear"
-            android:textColor="@color/cardview_item"
+            android:textColor="@color/cardview_bg"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/textViewCardDayOfWeek"
@@ -62,7 +64,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:text="30°"
-            android:textColor="@color/cardview_item"
+            android:textColor="@color/cardview_bg"
             android:textSize="20sp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -74,7 +76,7 @@
             android:layout_marginRight="4dp"
             android:layout_marginTop="0dp"
             android:text="25°"
-            android:textColor="@color/cardview_item"
+            android:textColor="@color/cardview_bg"
             app:layout_constraintRight_toRightOf="@+id/textViewCardMaxTempMini"
             app:layout_constraintTop_toBottomOf="@+id/textViewCardMaxTempMini" />
     </android.support.constraint.ConstraintLayout>
